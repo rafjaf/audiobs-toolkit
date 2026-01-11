@@ -42,15 +42,24 @@ export async function restoreCollectionsCommand(opts) {
     ? all.filter((c) => String(getCollectionId(c)) === String(opts.only) || getCollectionName(c) === String(opts.only))
     : all;
 
+  const collator = new Intl.Collator(undefined, {
+    sensitivity: 'base',
+    numeric: true
+  });
+
+  const selectedSorted = [...selected].sort((a, b) =>
+    collator.compare(getCollectionName(a), getCollectionName(b))
+  );
+
   if (opts.only && selected.length === 0) {
     throw new Error(`No collection matched --only ${opts.only}`);
   }
 
   process.stdout.write(
-    `Restoring ${selected.length} collection(s) from ${opts.in}${opts.dryRun ? ' (dry-run)' : ''}.\n`
+    `Restoring ${selectedSorted.length} collection(s) from ${opts.in}${opts.dryRun ? ' (dry-run)' : ''}.\n`
   );
 
-  for (const c of selected) {
+  for (const c of selectedSorted) {
     const name = getCollectionName(c);
     const description = c?.description || '';
     const bookIds = extractCollectionBookIds(c);

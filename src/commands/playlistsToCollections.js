@@ -58,15 +58,26 @@ export async function playlistsToCollectionsCommand(opts) {
     ? playlists.filter((p) => String(getPlaylistId(p)) === String(opts.playlist))
     : playlists;
 
+  const collator = new Intl.Collator(undefined, {
+    sensitivity: 'base',
+    numeric: true
+  });
+
+  const selectedSorted = [...selected].sort((a, b) => {
+    const aName = `${getPlaylistName(a)}${opts.nameSuffix ? String(opts.nameSuffix) : ''}`;
+    const bName = `${getPlaylistName(b)}${opts.nameSuffix ? String(opts.nameSuffix) : ''}`;
+    return collator.compare(aName, bName);
+  });
+
   if (opts.playlist && selected.length === 0) {
     throw new Error(`Playlist not found in library listing: ${opts.playlist}`);
   }
 
   process.stdout.write(
-    `Found ${selected.length} playlist(s) to process${opts.dryRun ? ' (dry-run)' : ''}.\n`
+    `Found ${selectedSorted.length} playlist(s) to process${opts.dryRun ? ' (dry-run)' : ''}.\n`
   );
 
-  for (const p of selected) {
+  for (const p of selectedSorted) {
     const playlistId = getPlaylistId(p);
     const playlistName = getPlaylistName(p);
     const collectionName = `${playlistName}${opts.nameSuffix ? String(opts.nameSuffix) : ''}`;
