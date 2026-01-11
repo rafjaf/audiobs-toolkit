@@ -1,0 +1,13 @@
+# Node
+node_modules/
+
+# Local config (contains API key)
+.audiobs-toolkit.config.json
+
+# App output
+collections-backup.json
+playlists-backup.json
+
+# Outputs
+*.log
+.DS_Store

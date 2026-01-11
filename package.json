@@ -1,0 +1,19 @@
+{
+  "name": "audiobs-toolkit",
+  "version": "0.1.0",
+  "description": "CLI utilities for Audiobookshelf collections/playlists",
+  "type": "module",
+  "bin": {
+    "audiobs-toolkit": "./src/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node ./src/cli.js",
+    "lint": "node -c ./src/cli.js"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}
